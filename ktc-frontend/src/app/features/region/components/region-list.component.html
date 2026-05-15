@@ -1,0 +1,139 @@
+<div class="page-wrapper">
+
+  <!-- ── Page header ─────────────────────────────────────────────────────── -->
+  <div class="page-head">
+    <div>
+      <div class="page-breadcrumb">
+        Administration <span>›</span> Régions
+      </div>
+      <h1 class="page-title">Régions</h1>
+      <p class="page-subtitle">Gestion des régions et hiérarchies géographiques</p>
+    </div>
+    <div class="head-actions">
+      <button class="btn btn-primary" (click)="goCreate()">
+        <span class="btn-icon">＋</span> Nouvelle région
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPI strip ───────────────────────────────────────────────────────── -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <span class="kpi-value">{{ totalCount() }}</span>
+      <span class="kpi-label">Total régions</span>
+    </div>
+  </div>
+
+  <!-- ── Toolbar ─────────────────────────────────────────────────────────── -->
+  <div class="toolbar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="Rechercher par nom, Display ID, Business, ID…"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
+    />
+  </div>
+
+  <!-- ── Loading (Skeleton cards) ───────────────────────────────────────── -->
+  <div *ngIf="isLoading()" class="region-grid region-grid--skeleton">
+    <article class="region-card region-card--skeleton" *ngFor="let item of [1,2,3,4,5,6]">
+      <div class="skeleton-line skeleton-line--title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line skeleton-line--short"></div>
+    </article>
+  </div>
+
+  <!-- ── Error ───────────────────────────────────────────────────────────── -->
+  <div *ngIf="error() && !isLoading()" class="error-box">
+    <span>⚠️ {{ error() }}</span>
+    <button class="btn btn-secondary btn--sm" (click)="load()">Réessayer</button>
+  </div>
+
+  <!-- ── Cards ───────────────────────────────────────────────────────────── -->
+  <div *ngIf="!isLoading() && !error()" class="card-surface">
+
+    <div class="card-toolbar">
+      <span class="card-toolbar-label">Trier par</span>
+      <button class="sort-chip" (click)="sort('regionName')">
+        Nom <span>{{ sortIcon('regionName') }}</span>
+      </button>
+      <button class="sort-chip" (click)="sort('regionId')">
+        ID <span>{{ sortIcon('regionId') }}</span>
+      </button>
+      <button class="sort-chip" (click)="sort('regionLevel')">
+        Niveau <span>{{ sortIcon('regionLevel') }}</span>
+      </button>
+      <button class="sort-chip" (click)="sort('businessName')">
+        Business <span>{{ sortIcon('businessName') }}</span>
+      </button>
+    </div>
+
+    <div *ngIf="filtered().length === 0" class="empty-state">
+      <div class="empty-icon">🗺️</div>
+      <p>Aucune région trouvée avec ces filtres</p>
+    </div>
+
+    <div *ngIf="filtered().length > 0" class="region-grid">
+      <article
+        *ngFor="let r of filtered(); trackBy: trackByRegionId"
+        class="region-card"
+        (click)="goEdit(r.regionId)"
+      >
+        <!-- Head -->
+        <header class="region-card__head">
+          <div class="name-cell">
+            <span class="status-dot dot--ok"></span>
+            <h3>{{ r.regionName }}</h3>
+          </div>
+          <span class="badge-level">Niv. {{ r.regionLevel }}</span>
+        </header>
+
+        <!-- Meta -->
+        <div class="region-card__meta">
+          <div class="meta-row">
+            <span class="meta-icon">🆔</span>
+            <span class="meta-label">ID</span>
+            <span>#{{ r.regionId }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-icon">🏷️</span>
+            <span class="meta-label">Display</span>
+            <code *ngIf="r.displayId">{{ r.displayId }}</code>
+            <span *ngIf="!r.displayId" class="meta-empty">—</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-icon">🏢</span>
+            <span class="meta-label">Business</span>
+            <span class="business-badge">{{ r.businessName }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-icon">🔗</span>
+            <span class="meta-label">Parent</span>
+            <span *ngIf="r.parentRegionId > 0" class="parent-badge">#{{ r.parentRegionId }}</span>
+            <span *ngIf="r.parentRegionId === 0" class="meta-empty">—</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <footer class="region-card__actions">
+          <button class="icon-btn icon-btn--edit" title="Modifier"
+            (click)="goEdit(r.regionId); $event.stopPropagation()">
+            ✏️ Modifier
+          </button>
+          <button class="icon-btn icon-btn--del" title="Supprimer"
+            (click)="confirmDelete(r); $event.stopPropagation()">
+            🗑 Supprimer
+          </button>
+        </footer>
+      </article>
+    </div>
+
+    <div class="table-footer">
+      {{ filtered().length }} région(s) affichée(s)
+    </div>
+
+  </div>
+
+</div>

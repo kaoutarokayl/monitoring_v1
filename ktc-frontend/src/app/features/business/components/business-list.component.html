@@ -1,0 +1,124 @@
+<div class="page-wrapper">
+
+  <!-- ── Page header ─────────────────────────────────────────────────────── -->
+  <div class="page-head">
+    <div>
+      <div class="page-breadcrumb">
+        Administration <span>›</span> Businesses
+      </div>
+      <h1 class="page-title">Entreprises & Partenaires</h1>
+      <p class="page-subtitle">Gestion des businesses et entités partenaires</p>
+    </div>
+    <div class="head-actions">
+      <button class="btn btn-primary" (click)="goCreate()">
+        <span class="btn-icon">＋</span> Nouveau Business
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPI strip ───────────────────────────────────────────────────────── -->
+  <div class="kpi-strip">
+    <div class="kpi-card">
+      <span class="kpi-value">{{ totalCount() }}</span>
+      <span class="kpi-label">Total</span>
+    </div>
+  </div>
+
+  <!-- ── Toolbar ─────────────────────────────────────────────────────────── -->
+  <div class="toolbar">
+    <input
+      class="search-input"
+      type="text"
+      placeholder="Rechercher par nom, Display ID, ID…"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
+    />
+  </div>
+
+  <!-- ── Loading (Skeleton cards) ───────────────────────────────────────── -->
+  <div *ngIf="isLoading()" class="business-grid business-grid--skeleton">
+    <article class="business-card business-card--skeleton" *ngFor="let item of [1,2,3,4,5,6]">
+      <div class="skeleton-line skeleton-line--title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line skeleton-line--short"></div>
+    </article>
+  </div>
+
+  <!-- ── Error ───────────────────────────────────────────────────────────── -->
+  <div *ngIf="error() && !isLoading()" class="error-box">
+    <span>⚠️ {{ error() }}</span>
+    <button class="btn btn-secondary btn--sm" (click)="load()">Réessayer</button>
+  </div>
+
+  <!-- ── Cards ───────────────────────────────────────────────────────────── -->
+  <div *ngIf="!isLoading() && !error()" class="card-surface">
+
+    <div class="card-toolbar">
+      <span class="card-toolbar-label">Trier par</span>
+      <button class="sort-chip" (click)="sort('businessName')">
+        Nom <span>{{ sortIcon('businessName') }}</span>
+      </button>
+      <button class="sort-chip" (click)="sort('businessId')">
+        ID <span>{{ sortIcon('businessId') }}</span>
+      </button>
+      <button class="sort-chip" (click)="sort('displayId')">
+        Display ID <span>{{ sortIcon('displayId') }}</span>
+      </button>
+    </div>
+
+    <div *ngIf="filtered().length === 0" class="empty-state">
+      <div class="empty-icon">🏢</div>
+      <p>Aucun business trouvé avec ces filtres</p>
+    </div>
+
+    <div *ngIf="filtered().length > 0" class="business-grid">
+      <article
+        *ngFor="let b of filtered(); trackBy: trackByBusinessId"
+        class="business-card"
+        (click)="goEdit(b.businessId)"
+      >
+        <!-- Head -->
+        <header class="business-card__head">
+          <div class="name-cell">
+            <span class="status-dot dot--ok"></span>
+            <h3>{{ b.businessName }}</h3>
+          </div>
+          <span class="badge badge--ok">Actif</span>
+        </header>
+
+        <!-- Meta -->
+        <div class="business-card__meta">
+          <div class="meta-row">
+            <span class="meta-icon">🆔</span>
+            <span class="meta-label">ID</span>
+            <span>#{{ b.businessId }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-icon">🏷️</span>
+            <span class="meta-label">Display</span>
+            <code>{{ b.displayId || '—' }}</code>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <footer class="business-card__actions">
+          <button class="icon-btn icon-btn--edit" title="Modifier"
+            (click)="goEdit(b.businessId); $event.stopPropagation()">
+            ✏️ Modifier
+          </button>
+          <button class="icon-btn icon-btn--del" title="Supprimer"
+            (click)="confirmDelete(b); $event.stopPropagation()">
+            🗑 Supprimer
+          </button>
+        </footer>
+      </article>
+    </div>
+
+    <div class="table-footer">
+      {{ filtered().length }} business(es) affiché(s)
+    </div>
+
+  </div>
+
+</div>
