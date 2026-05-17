@@ -1,6 +1,10 @@
 using System.Text.Json;
 using KtcWeb.Hubs;
+using KtcWeb.Application.Interfaces;
 using KtcWeb.Application.Services;
+using KtcWeb.Domain.Interfaces;
+using KtcWeb.Infrastructure.Data;
+using KtcWeb.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
@@ -46,6 +50,8 @@ builder.Services.AddScoped<INocDashboardService, NocDashboardService>();
 builder.Services.AddSingleton<MarketingStateService>();  // État marketing en mémoire
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
+builder.Services.AddScoped<ITicketSearchRepository, TicketSearchRepository>();
+builder.Services.AddScoped<ITicketSearchService, TicketSearchService>();
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 // === AJOUT POUR LA BASE KTC ===

@@ -173,11 +173,21 @@ export class HeaderComponent implements OnDestroy {
     this.router.navigate(['/campaign']);
   }
 
+  goToTicketSearch() {
+    this.isConfigMenuOpen.set(false);
+    this.isProfileOpen.set(false);
+    this.router.navigate(['/ticket-search']);
+  }
+
   isCampaignRoute(): boolean {
     return this.router.url.startsWith('/campaign');
   }
 
+  isTicketSearchRoute(): boolean {
+    return this.router.url.startsWith('/ticket-search');
+  }
+
   isConfigRoute(): boolean {
-    return this.isCampaignRoute();
+    return this.isCampaignRoute() || this.isTicketSearchRoute();
   }
 }

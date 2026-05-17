@@ -37,6 +37,7 @@ import { AtmCashCassetteComponent } from './features/atm/components/atm-cash-cas
 import { CampaignListComponent } from './features/campaign/components/campaign-list.component';
 import { CampaignFormComponent } from './features/campaign/components/campaign-form.component';
 import { CampaignMarketingControlComponent } from './features/campaign/components/campaign-marketing-control.component';
+import { TicketSearchComponent } from './features/ticket-search/components/ticket-search.component';
 
 /** Rôles AD — doit correspondre aux groupes déclarés dans Program.cs */
 const WRITE_ROLES = ['Support'];
@@ -54,6 +55,7 @@ export const routes: Routes = [
       // ── Campagnes Marketing (hors AdminLayout, route racine) ───────────────
       // IMPORTANT: 'marketing' et 'create' DOIVENT être avant ':id' pour éviter que Angular
       // interprète ces mots comme un campaignId
+      { path: 'ticket-search',         component: TicketSearchComponent },
       { path: 'campaign',              component: CampaignListComponent },
       { path: 'campaign/create',       component: CampaignFormComponent },
       { path: 'campaign/:id/edit',     component: CampaignFormComponent },
