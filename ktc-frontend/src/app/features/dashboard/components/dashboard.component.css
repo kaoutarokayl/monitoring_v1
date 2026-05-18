@@ -639,3 +639,33 @@
   .table-search     { width: 100%; }
   .skeleton-grid    { grid-template-columns: 1fr 1fr; }
 }
+
+.grafana-page {
+  padding: 16px;
+  min-height: 100vh;
+  background: #0f172a;
+}
+
+.grafana-header {
+  margin-bottom: 16px;
+}
+
+.grafana-header h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  color: #ffffff;
+}
+
+.grafana-container {
+  width: 100%;
+  min-height: 90vh;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.grafana-frame {
+  width: 100%;
+  min-height: 90vh;
+  border: none;
+}
